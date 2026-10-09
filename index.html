@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#cbb8ff">
+<title>Catch That Idea! 💡 a 20-second game</title>
+<meta name="description" content="Your ideas are escaping. Can you catch them before they become abandoned repos? A 20-second game.">
+<!-- Link previews (WhatsApp / Instagram). After deploying, replace https://YOUR-SITE.netlify.app with your real URL. -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Catch That Idea! 💡">
+<meta property="og:description" content="Your ideas are escaping. Catch them before they become abandoned repos. 20 seconds. Go.">
+<meta property="og:image" content="https://YOUR-SITE.netlify.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#4a3a6b; --ink-soft:#7a6a9b;
+  --bg1:#f3ecff; --bg2:#dccbff; --lav:#c9b6ff; --purple:#9d7cf0; --deep:#7b5ce0;
+  --yellow:#ffe58a; --butter:#fff1a8; --cream:#fff9ec; --gold:#ffcf4d;
+  --pink:#ffb3cf; --mint:#a8e6cf; --peach:#ffc9a3;
+  --card:#ffffffd9;
+  --r:22px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg2)}
+body{
+  font-family:"Fredoka",ui-rounded,"SF Pro Rounded","Segoe UI",system-ui,sans-serif;
+  color:var(--ink);
+  -webkit-user-select:none;user-select:none;
+  overscroll-behavior:none;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;touch-action:manipulation}
+
+#app{
+  position:fixed;inset:0;overflow:hidden;
+  background:
+    radial-gradient(circle at 15% 10%,#fff6 0 18%,transparent 19%),
+    radial-gradient(circle at 90% 80%,#fff5 0 14%,transparent 15%),
+    linear-gradient(170deg,var(--bg1) 0%,#e6d8ff 45%,var(--bg2) 100%);
+}
+#app::before{ /* dotted paper texture */
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.35;
+  background-image:radial-gradient(#9d7cf055 1.2px,transparent 1.3px);
+  background-size:22px 22px;
+}
+.deco{position:absolute;pointer-events:none;font-size:18px;color:#fff;opacity:.9;
+  text-shadow:0 0 8px #fff;animation:twinkle 3s ease-in-out infinite}
+.deco.f{color:var(--pink);text-shadow:none}
+.deco.y{color:var(--yellow);text-shadow:0 0 6px #fff7c0}
+@keyframes twinkle{0%,100%{transform:scale(.8) rotate(0);opacity:.5}50%{transform:scale(1.15) rotate(20deg);opacity:1}}
+
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;
+  padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
+.screen.active{display:flex}
+
+/* ---------- INTRO ---------- */
+#intro{justify-content:center;gap:clamp(10px,2.2vh,18px);text-align:center}
+.pill{display:inline-block;background:#fff;border:2.5px solid var(--ink);border-radius:99px;
+  padding:4px 14px;font-weight:600;font-size:14px;box-shadow:0 3px 0 var(--ink)}
+.hero{position:relative;width:min(46vw,190px);aspect-ratio:100/120;margin-top:clamp(28px,6vh,56px)}
+.hero svg{width:100%;height:100%;overflow:visible;animation:bob 2.2s ease-in-out infinite;filter:drop-shadow(0 10px 0 #7b5ce022)}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-10px) rotate(3deg)}}
+.bubble{position:absolute;left:50%;bottom:100%;transform:translate(-50%,-4px);white-space:nowrap;
+  background:#fff;border:2.5px solid var(--ink);border-radius:16px;padding:7px 12px;font-size:15px;font-weight:500;
+  box-shadow:0 3px 0 var(--ink);animation:wiggle 3s ease-in-out infinite}
+.bubble::after{content:"";position:absolute;left:50%;top:100%;width:12px;height:12px;background:#fff;
+  border-right:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);transform:translate(-50%,-6px) rotate(45deg)}
+@keyframes wiggle{0%,100%{transform:translate(-50%,-4px) rotate(-2deg)}50%{transform:translate(-50%,-8px) rotate(2deg)}}
+h1.title{font-size:clamp(40px,12vw,64px);line-height:.95;font-weight:700;color:#fff;letter-spacing:.5px;
+  -webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 5px 0 var(--ink)}
+h1.title span{color:var(--yellow);display:inline-block;animation:bob 2.6s ease-in-out infinite}
+.sub{font-size:16px;color:var(--ink-soft);font-weight:500;max-width:300px}
+.howto{display:flex;gap:10px;justify-content:center;margin-top:2px}
+.how{background:var(--card);border:2.5px solid var(--ink);border-radius:18px;width:96px;padding:8px 4px 7px;
+  box-shadow:0 3px 0 var(--ink);font-size:13px;font-weight:600;line-height:1.15}
+.how svg{width:42px;height:42px;display:block;margin:0 auto 3px;overflow:visible}
+.how small{display:block;font-weight:500;color:var(--ink-soft);font-size:11.5px}
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--yellow);border:3px solid var(--ink);border-radius:99px;
+  font-size:22px;font-weight:700;padding:14px 34px;box-shadow:0 6px 0 var(--ink);
+  transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(5px);box-shadow:0 1px 0 var(--ink)}
+.btn.purple{background:var(--purple);color:#fff}
+.btn.small{font-size:17px;padding:10px 20px;box-shadow:0 4px 0 var(--ink)}
+.btn.small:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+#startBtn{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{scale:1}50%{scale:1.06}}
+.foot{font-size:13px;color:var(--ink-soft)}
+
+/* ---------- GAME ---------- */
+#game{padding:0}
+.hud{position:absolute;left:0;right:0;top:0;z-index:20;display:flex;align-items:center;gap:8px;
+  padding:max(12px,env(safe-area-inset-top)) 12px 8px}
+.chip{background:#fff;border:2.5px solid var(--ink);border-radius:99px;padding:4px 12px;font-weight:700;
+  font-size:19px;box-shadow:0 3px 0 var(--ink);white-space:nowrap;display:flex;align-items:center;gap:5px;min-width:74px;justify-content:center}
+.chip.bump{animation:bump .25s}
+@keyframes bump{50%{transform:scale(1.2)}}
+.chip.boost{background:var(--lav);transition:background .2s}
+.chip.boost.on{background:var(--purple);color:#fff}
+.chip.boost.lose{animation:shake .35s}
+.timer{flex:1;height:26px;background:#fff;border:2.5px solid var(--ink);border-radius:99px;overflow:hidden;position:relative;box-shadow:0 3px 0 var(--ink)}
+.timer i{position:absolute;inset:0;transform-origin:left;background:linear-gradient(90deg,var(--mint),#7fd9b0);border-radius:99px}
+.timer.late i{background:linear-gradient(90deg,var(--pink),#ff8db8)}
+.timer b{position:absolute;inset:0;display:grid;place-items:center;font-size:14px;font-weight:700}
+.mute{width:38px;height:38px;border-radius:50%;background:#fff;border:2.5px solid var(--ink);box-shadow:0 3px 0 var(--ink);font-size:17px;flex:none}
+
+#field{position:absolute;inset:0;touch-action:none;overflow:hidden}
+.obj{position:absolute;left:0;top:0;will-change:transform;padding:10px;margin:-10px;cursor:pointer}
+.obj svg{display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
+.obj.gold svg{filter:drop-shadow(0 0 10px #ffd84d)}
+.obj .inner{width:100%;height:100%;animation:sway 1.8s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+.obj.caught .inner{animation:caught .32s ease-out forwards}
+@keyframes caught{0%{transform:scale(1)}35%{transform:scale(1.35)}100%{transform:scale(0);opacity:0}}
+.obj.poof .inner{animation:poof .45s ease-out forwards}
+@keyframes poof{0%{transform:scale(1)}40%{transform:scale(1.25,0.85)}100%{transform:scale(1.8);opacity:0;filter:blur(6px)}}
+
+.pop{position:absolute;z-index:30;pointer-events:none;transform:translate(-50%,-50%);text-align:center;white-space:nowrap;
+  font-weight:700;animation:floatUp 1s ease-out forwards}
+.pop .pts{font-size:26px;color:#fff;-webkit-text-stroke:2px var(--ink);paint-order:stroke fill;display:block}
+.pop .msg{font-size:13.5px;background:#fff;border:2px solid var(--ink);border-radius:10px;padding:2px 8px;display:inline-block;margin-top:2px}
+.pop.bad .pts{color:#ff8db8}
+.pop.team .pts{color:#c9b0ff}
+.pop.gold .pts{color:var(--gold)}
+@keyframes floatUp{0%{opacity:0;transform:translate(-50%,-30%) scale(.6)}15%{opacity:1;transform:translate(-50%,-60%) scale(1.08)}100%{opacity:0;transform:translate(-50%,-160%) scale(1)}}
+.spark{position:absolute;z-index:25;width:10px;height:10px;border-radius:50%;pointer-events:none;
+  animation:spark .55s ease-out forwards}
+@keyframes spark{to{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+
+.fog{position:absolute;inset:0;z-index:15;pointer-events:none;opacity:0;
+  background:radial-gradient(circle,#ffffffcc,#d8d0ecdd);transition:opacity .25s}
+.fog.on{opacity:1}
+.banner{position:absolute;left:50%;top:42%;z-index:40;transform:translate(-50%,-50%);pointer-events:none;
+  font-size:clamp(38px,12vw,60px);font-weight:700;color:#fff;-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;
+  text-shadow:0 5px 0 var(--ink);white-space:nowrap;text-align:center;opacity:0}
+.banner.show{animation:banner .9s ease-out forwards}
+.banner small{display:block;font-size:17px;-webkit-text-stroke:0;text-shadow:none;color:var(--ink);background:#fff;
+  border:2.5px solid var(--ink);border-radius:12px;padding:3px 10px;margin-top:6px;font-weight:600}
+@keyframes banner{0%{opacity:0;transform:translate(-50%,-50%) scale(.4)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}35%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-60%) scale(1)}}
+.toast{position:absolute;left:50%;top:calc(max(12px,env(safe-area-inset-top)) + 54px);z-index:30;transform:translateX(-50%);
+  background:#fff;border:2.5px solid var(--ink);border-radius:14px;padding:5px 12px;font-weight:600;font-size:14px;white-space:nowrap;
+  box-shadow:0 3px 0 var(--ink);opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(4px)}
+#game.shake{animation:shake .35s}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.pause{position:absolute;inset:0;z-index:60;display:none;place-items:center;background:#f3ecffcc;backdrop-filter:blur(3px)}
+.pause.show{display:grid}
+
+/* ---------- END ---------- */
+#end{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;justify-content:flex-start;gap:14px;padding-top:max(20px,env(safe-area-inset-top));padding-bottom:max(28px,env(safe-area-inset-bottom))}
+#end > *{flex:none;width:100%;max-width:420px}
+.stage{opacity:0;transform:translateY(18px) scale(.97);transition:opacity .5s,transform .5s cubic-bezier(.3,1.5,.5,1)}
+.stage.in{opacity:1;transform:none}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:var(--r);box-shadow:0 5px 0 var(--ink);padding:16px;text-align:center}
+.timesup{font-size:15px;font-weight:600;color:var(--ink-soft)}
+.rank{font-size:clamp(26px,7.6vw,34px);font-weight:700;line-height:1.05;margin:2px 0 4px}
+.rank-sub{font-size:15px;color:var(--ink-soft);font-weight:500}
+.score-big{font-size:64px;font-weight:700;line-height:1;color:#fff;-webkit-text-stroke:3px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 var(--ink);margin:10px 0 6px}
+.score-big small{font-size:18px;-webkit-text-stroke:0;text-shadow:none;color:var(--ink-soft);font-weight:600;margin-left:4px}
+.stats{display:flex;justify-content:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.stat{background:#fff;border:2px solid var(--ink);border-radius:12px;padding:4px 9px;font-size:14px;font-weight:600}
+.epitaph{font-size:14px;margin-top:10px;color:var(--ink-soft)}
+.beat{margin-top:8px;font-weight:700;font-size:15px;background:var(--yellow);border:2px solid var(--ink);border-radius:12px;padding:4px 10px;display:inline-block}
+
+.grow h2{font-size:clamp(26px,8vw,34px);font-weight:700;line-height:1;color:#fff;-webkit-text-stroke:2.5px var(--ink);paint-order:stroke fill;text-shadow:0 4px 0 var(--ink)}
+.plant{width:100%;max-width:330px;margin:2px auto 0;display:block;overflow:visible}
+.plant .t-trunk{transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0)}
+.grow.in .plant .t-trunk{transition:transform .75s cubic-bezier(.3,1.25,.5,1) .15s;transform:scaleY(1)}
+.plant .t-puff,.plant .t-bulb,.plant .t-bud,.plant .t-mate,.plant .t-spark,.plant .t-pop{transform-box:fill-box;transform-origin:center;transform:scale(0)}
+.plant .t-bulb{transform-origin:50% 0}
+.plant .t-mate{transform-origin:50% 100%}
+.grow.in .plant :is(.t-puff,.t-bulb,.t-bud,.t-mate,.t-spark,.t-pop){transition:transform .5s cubic-bezier(.3,1.7,.5,1);transform:scale(1)}
+.plant .swing{transform-box:fill-box;transform-origin:50% 0;animation:swing 2.6s ease-in-out infinite}
+@keyframes swing{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.plant .glowp{animation:glowp 2.2s ease-in-out infinite}
+@keyframes glowp{0%,100%{opacity:.45}50%{opacity:1}}
+.plant .mate-hop{animation:hop 1.3s ease-in-out infinite;transform-box:fill-box}
+.plant .drop{animation:drip .9s linear infinite}
+@keyframes drip{0%{transform:translate(0,0);opacity:0}15%{opacity:1}100%{transform:translate(3px,16px);opacity:0}}
+.plant .heart{animation:heart 2.4s ease-out infinite;transform-box:fill-box}
+@keyframes heart{0%{transform:translateY(0);opacity:0}20%{opacity:1}100%{transform:translateY(-22px);opacity:0}}
+.plant .twk{transform-box:fill-box;transform-origin:center;animation:twinkle 2.4s ease-in-out infinite}
+.plant .fly{animation:fly 3.5s ease-in-out infinite}
+@keyframes fly{0%,100%{transform:translate(0,0);opacity:.3}50%{transform:translate(6px,-10px);opacity:1}}
+@keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.equation{font-size:15px;font-weight:600;margin-top:4px}
+.line1{font-size:18px;font-weight:500;line-height:1.3;margin-top:10px}
+.line1 b{font-weight:700;background:linear-gradient(transparent 60%,var(--yellow) 60%)}
+.ccg{display:flex;gap:8px;justify-content:center;margin:14px 0 4px}
+.ccg div{flex:1;border:2.5px solid var(--ink);border-radius:16px;padding:8px 4px 7px;box-shadow:0 3px 0 var(--ink);font-weight:700;font-size:16px;line-height:1.1}
+.ccg div small{display:block;font-size:11.5px;font-weight:500;color:var(--ink);opacity:.8;margin-top:2px}
+.ccg .c1{background:var(--yellow)} .ccg .c2{background:var(--lav)} .ccg .c3{background:var(--mint)}
+.ccg div{opacity:0;transform:scale(.5)}
+.ccg.go div{animation:popin .45s cubic-bezier(.3,1.8,.5,1) forwards}
+.ccg.go div:nth-child(2){animation-delay:.18s}.ccg.go div:nth-child(3){animation-delay:.36s}
+@keyframes popin{to{opacity:1;transform:scale(1)}}
+.tagline{font-size:clamp(23px,6.8vw,29px);font-weight:700;line-height:1.12;margin-top:12px}
+.tagline em{font-style:normal;color:var(--deep)}
+.telugu{font-size:14.5px;color:var(--ink-soft);margin-top:10px;font-style:italic;line-height:1.35}
+.sig{display:flex;align-items:center;gap:12px;text-align:left;background:var(--ink);color:#fff;border-color:var(--ink)}
+.sig .av{flex:none;width:56px;height:56px;border-radius:50%;background:var(--yellow);border:3px solid #fff;display:grid;place-items:center}
+.sig .av svg{width:34px;height:40px;overflow:visible}
+.sig .nm{font-size:24px;font-weight:700;line-height:1}
+.sig .role{font-size:14px;font-weight:500;opacity:.9;margin-top:3px}
+.events-btn{position:relative;display:flex;align-items:center;gap:12px;text-align:left;width:100%;
+  background:linear-gradient(135deg,var(--yellow),#ffd76a);border:3px solid var(--ink);border-radius:var(--r);
+  box-shadow:0 5px 0 var(--ink);padding:12px 16px;transition:transform .08s,box-shadow .08s}
+.events-btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--ink)}
+.events-btn.in{animation:nudge 3.2s ease-in-out 1s infinite}
+@keyframes nudge{0%,82%,100%{rotate:0deg}86%{rotate:-2.5deg}90%{rotate:2.5deg}94%{rotate:-1.5deg}97%{rotate:1deg}}
+.events-btn .eb-ico{flex:none;width:52px;height:52px;border-radius:16px;background:#fff;border:2.5px solid var(--ink);display:grid;place-items:center;font-size:28px}
+.events-btn .eb-t{font-size:19px;font-weight:700;line-height:1.1}
+.events-btn .eb-s{font-size:14px;font-weight:600;color:var(--ink-soft);margin-top:2px}
+.events-btn .eb-go{margin-left:auto;flex:none;width:38px;height:38px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font-size:16px;padding-left:3px}
+
+.trailer{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;flex-direction:column;gap:14px;
+  padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));
+  background:#e9ddffee;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.trailer.show{display:flex;animation:fadeIn .25s ease-out}
+@keyframes fadeIn{from{opacity:0}}
+.tv{position:relative;height:min(76dvh,calc((100vw - 32px) * 16 / 9));aspect-ratio:9/16;max-width:100%;
+  background:var(--cream);border:4px solid var(--ink);border-radius:26px;box-shadow:0 7px 0 var(--ink);overflow:hidden;animation:tvIn .4s cubic-bezier(.3,1.5,.5,1)}
+@keyframes tvIn{from{transform:scale(.7) translateY(30px);opacity:0}}
+.tv video{width:100%;height:100%;object-fit:contain;display:block;background:var(--bg1)}
+.tv .tv-msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;font-weight:600;font-size:16px;background:var(--bg1)}
+.tv .tv-msg svg{width:64px;height:77px;display:block;margin:0 auto 10px;animation:bob 1.4s ease-in-out infinite;overflow:visible}
+.tv .tv-end{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:flex-end;gap:10px;padding:20px;
+  background:linear-gradient(transparent 45%,#f3ecffee 75%)}
+.tv .tv-end.show{display:flex;animation:fadeIn .3s}
+.tv .tv-bar{position:absolute;left:12px;right:12px;top:12px;height:6px;border-radius:9px;background:#4a3a6b33;overflow:hidden}
+.tv .tv-bar i{display:block;height:100%;width:0;background:var(--purple);border-radius:9px}
+.tv-close{position:absolute;top:max(14px,env(safe-area-inset-top));right:14px;width:44px;height:44px;border-radius:50%;background:#fff;
+  border:3px solid var(--ink);box-shadow:0 3px 0 var(--ink);font-size:18px;font-weight:700;z-index:2}
+.tv-hint{font-size:13px;color:var(--ink-soft);font-weight:500}
+.actions{display:flex;flex-direction:column;align-items:center;gap:12px}
+.actions .row{display:flex;gap:10px}
+.fine{font-size:12px;color:var(--ink-soft);text-align:center}
+
+.confetti{position:fixed;top:-20px;z-index:80;width:9px;height:14px;border-radius:3px;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(var(--rot))}}
+
+@media (max-height:740px){
+  #intro{gap:9px}
+  .hero{width:min(30vw,120px);margin-top:46px}
+  h1.title{font-size:clamp(36px,11vw,50px)}
+  .sub{font-size:15px}
+  .how{width:90px;padding:6px 3px}
+  .how svg{width:32px;height:32px}
+  .btn{padding:11px 28px;font-size:20px}
+}
+@media (max-height:600px){
+  .hero{width:96px;margin-top:44px}
+  .howto{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .deco,.hero svg,#startBtn,h1.title span,.obj .inner,.bubble{animation:none!important}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="sprites"></defs></svg>
+
+<div id="app">
+  <div id="decos"></div>
+
+  <!-- INTRO -->
+  <section id="intro" class="screen active">
+    <span class="pill">✦ a 20-second game ✦</span>
+    <div class="hero">
+      <div class="bubble" id="bubble">psst… your ideas are escaping!</div>
+      <svg viewBox="0 0 100 120"><use href="#bulb" color="#fff1a8"/></svg>
+    </div>
+    <h1 class="title">Catch<br>That <span>Idea!</span></h1>
+    <p class="sub" id="introSub">Catch them before they turn into abandoned GitHub repos.</p>
+    <div class="howto">
+      <div class="how"><svg viewBox="0 0 100 120"><use href="#bulb" color="#fff1a8"/></svg>Tap ideas<small>+10 each</small></div>
+      <div class="how"><svg viewBox="0 0 100 100"><use href="#team" color="#c4a8ff"/></svg>Teammates<small>multiply points</small></div>
+      <div class="how"><svg viewBox="0 0 120 90"><use href="#cloud"/></svg>"Tomorrow"<small>don't tap 😴</small></div>
+    </div>
+    <button class="btn" id="startBtn">Let's go! ▶</button>
+    <p class="foot">no login · no forms · just vibes</p>
+  </section>
+
+  <!-- GAME -->
+  <section id="game" class="screen">
+    <div id="field"></div>
+    <div class="fog" id="fog"></div>
+    <div class="hud">
+      <div class="chip" id="scoreChip">💡 <span id="score">0</span></div>
+      <div class="timer" id="timer"><i id="timerFill"></i><b id="timerText">20s</b></div>
+      <div class="chip boost" id="boostChip">👥 ×<span id="mult">1</span></div>
+      <button class="mute" id="muteBtn" aria-label="Toggle sound">🔊</button>
+    </div>
+    <div class="toast" id="toast"></div>
+    <div class="banner" id="banner"></div>
+    <div class="pause" id="pause"><button class="btn purple" id="resumeBtn">Tap to resume ▶</button></div>
+  </section>
+
+  <!-- END -->
+  <section id="end" class="screen">
+    <div class="card stage" id="resultCard">
+      <div class="timesup">⏰ time's up! you are a…</div>
+      <div class="rank" id="rankName">Hackathon Hero ⚡</div>
+      <div class="rank-sub" id="rankSub">—</div>
+      <div class="score-big"><span id="finalScore">0</span><small>pts</small></div>
+      <div class="stats">
+        <span class="stat">💡 <span id="sIdeas">0</span> ideas</span>
+        <span class="stat">👥 <span id="sTeam">0</span> teammates</span>
+        <span class="stat">😴 <span id="sClouds">0</span> <span id="sCloudsLbl">snoozes</span></span>
+      </div>
+      <div class="epitaph" id="epitaph"></div>
+      <div id="beatLine"></div>
+    </div>
+
+    <div class="card grow stage" id="growCard">
+      <h2>LOOK WHAT WE GREW! 🌱</h2>
+      <svg class="plant" id="plant" viewBox="0 0 320 300"></svg>
+      <div class="equation" id="equation"></div>
+      <p class="line1">Ideas are great.<br><b>Ideas with teammates</b> are even better.</p>
+      <div class="ccg" id="ccg">
+        <div class="c1">CREATE<small>build the thing</small></div>
+        <div class="c2">CONNECT<small>find your people</small></div>
+        <div class="c3">GROW<small>level up, together</small></div>
+      </div>
+      <p class="tagline">Let's build a campus that <em>builds.</em> Together.</p>
+      <p class="telugu">Andaru <b>"edho cheyyali"</b> antaru.<br>Nenu <b>"cheddam"</b> antunna. ✨</p>
+    </div>
+
+    <div class="card sig stage" id="sigCard">
+      <div class="av"><svg viewBox="0 0 100 120"><use href="#bulb" color="#fff9ec"/></svg></div>
+      <div><div class="nm">Vijaya</div><div class="role">SAC Technical Head Nominee</div></div>
+    </div>
+
+    <button class="events-btn stage" id="eventsBtn" aria-label="Watch the events teaser">
+      <span class="eb-ico">🍿</span>
+      <span><span class="eb-t" style="display:block">Wanna know abt events?</span><span class="eb-s" style="display:block">Click me! 👀 (10 sec)</span></span>
+      <span class="eb-go">▶</span>
+    </button>
+
+    <div class="actions stage" id="actions">
+      <button class="btn purple" id="shareBtn">Challenge a friend 📤</button>
+      <div class="row">
+        <button class="btn small" id="againBtn">Play again ↻</button>
+        <button class="btn small" id="cardBtn">Save score card</button>
+      </div>
+      <p class="fine">Nothing you did here was stored anywhere. Promise. 🤞</p>
+    </div>
+  </section>
+
+  <div class="trailer" id="trailer" role="dialog" aria-modal="true" aria-label="Events teaser">
+    <button class="tv-close" id="tvClose" aria-label="Close">✕</button>
+    <div class="tv" id="tv">
+      <video id="vid" src="vid.mp4" playsinline webkit-playsinline preload="none"></video>
+      <div class="tv-bar"><i id="tvBar"></i></div>
+      <div class="tv-msg" id="tvMsg"><div><svg viewBox="0 0 100 120"><use href="#bulb" color="#fff1a8"/></svg><span id="tvMsgText">popping the popcorn… 🍿</span></div></div>
+      <div class="tv-end" id="tvEnd">
+        <button class="btn small purple" id="tvReplay">Replay ↻</button>
+        <button class="btn small" id="tvBack">Back to my tree 🌱</button>
+      </div>
+    </div>
+    <p class="tv-hint">tap the video to pause</p>
+  </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+const $ = s => document.querySelector(s);
+const INK = "#4a3a6b";
+
+/* ============ ART (shared by DOM sprites + share-card canvas) ============ */
+const ART = {
+  bulb: `
+    <circle cx="50" cy="46" r="44" fill="currentColor" opacity=".25"/>
+    <rect x="34" y="66" width="32" height="20" rx="6" fill="currentColor" stroke="${INK}" stroke-width="3.5"/>
+    <circle cx="50" cy="46" r="34" fill="currentColor" stroke="${INK}" stroke-width="3.5"/>
+    <rect x="37" y="66" width="26" height="12" fill="currentColor"/>
+    <rect x="35" y="84" width="30" height="9" rx="4.5" fill="#c9b6ff" stroke="${INK}" stroke-width="3"/>
+    <rect x="38" y="92" width="24" height="8" rx="4" fill="#b29cf0" stroke="${INK}" stroke-width="3"/>
+    <rect x="44" y="99" width="12" height="7" rx="3.5" fill="${INK}"/>
+    <path d="M27 38 Q30 22 44 17" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".85"/>
+    <ellipse cx="40" cy="47" rx="3.8" ry="4.8" fill="${INK}"/><ellipse cx="60" cy="47" rx="3.8" ry="4.8" fill="${INK}"/>
+    <circle cx="41.4" cy="45.2" r="1.5" fill="#fff"/><circle cx="61.4" cy="45.2" r="1.5" fill="#fff"/>
+    <ellipse cx="32" cy="56" rx="5" ry="3" fill="#ff9fc4" opacity=".8"/><ellipse cx="68" cy="56" rx="5" ry="3" fill="#ff9fc4" opacity=".8"/>
+    <path d="M44 56 Q50 62 56 56" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+  team: `
+    <path d="M50 14 q-2 -8 4 -12" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M54 4 q10 -4 12 4 q-8 4 -12 -4z" fill="#8fdcb5" stroke="${INK}" stroke-width="2.5"/>
+    <ellipse cx="50" cy="52" rx="38" ry="36" fill="currentColor" stroke="${INK}" stroke-width="3.5"/>
+    <path d="M24 38 Q28 26 40 21" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".6"/>
+    <ellipse cx="39" cy="45" rx="4" ry="5" fill="${INK}"/><ellipse cx="61" cy="45" rx="4" ry="5" fill="${INK}"/>
+    <circle cx="40.5" cy="43" r="1.6" fill="#fff"/><circle cx="62.5" cy="43" r="1.6" fill="#fff"/>
+    <ellipse cx="30" cy="55" rx="5" ry="3" fill="#ff9fc4" opacity=".85"/><ellipse cx="70" cy="55" rx="5" ry="3" fill="#ff9fc4" opacity=".85"/>
+    <path d="M43 54 Q50 62 57 54 Z" fill="${INK}"/>
+    <rect x="27" y="64" width="46" height="26" rx="5" fill="#fff9ec" stroke="${INK}" stroke-width="3"/>
+    <text x="50" y="82" text-anchor="middle" font-family="monospace" font-weight="700" font-size="13" fill="${INK}">&lt;/&gt;</text>
+    <circle cx="22" cy="74" r="6" fill="currentColor" stroke="${INK}" stroke-width="3"/>
+    <circle cx="78" cy="74" r="6" fill="currentColor" stroke="${INK}" stroke-width="3"/>`,
+  cloud: `
+    <g stroke="${INK}" stroke-width="7">
+      <circle cx="38" cy="50" r="22"/><circle cx="62" cy="36" r="26"/><circle cx="86" cy="52" r="20"/><rect x="24" y="50" width="76" height="24" rx="12"/>
+    </g>
+    <g fill="#e2dcf0">
+      <circle cx="38" cy="50" r="22"/><circle cx="62" cy="36" r="26"/><circle cx="86" cy="52" r="20"/><rect x="24" y="50" width="76" height="24" rx="12"/>
+    </g>
+    <path d="M44 22 Q52 14 62 14" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".9"/>
+    <path d="M44 48 q5 4 10 0" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <path d="M68 48 q5 4 10 0" stroke="${INK}" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="61" cy="61" rx="4" ry="5" fill="${INK}"/>
+    <text x="96" y="22" font-family="Fredoka,sans-serif" font-weight="700" font-size="17" fill="${INK}">z</text>
+    <text x="106" y="10" font-family="Fredoka,sans-serif" font-weight="700" font-size="12" fill="${INK}">z</text>`
+};
+$("#sprites").innerHTML =
+  `<symbol id="bulb" viewBox="0 0 100 120">${ART.bulb}</symbol>` +
+  `<symbol id="team" viewBox="0 0 100 100">${ART.team}</symbol>` +
+  `<symbol id="cloud" viewBox="0 0 120 90">${ART.cloud}</symbol>`;
+
+/* background sparkles */
+(() => {
+  const d = $("#decos"), glyphs = ["✦","✧","✿","⋆","✦","❀"];
+  for (let i = 0; i < 16; i++) {
+    const s = document.createElement("span");
+    const g = glyphs[i % glyphs.length];
+    s.className = "deco" + (g === "✿" || g === "❀" ? " f" : i % 3 === 0 ? " y" : "");
+    s.textContent = g;
+    s.style.left = (Math.random() * 94) + "%";
+    s.style.top = (Math.random() * 94) + "%";
+    s.style.fontSize = (12 + Math.random() * 14) + "px";
+    s.style.animationDelay = (-Math.random() * 3) + "s";
+    d.appendChild(s);
+  }
+})();
+
+/* ============ SOUND (synthesised, zero downloads) ============ */
+let ac = null, muted = false;
+try { muted = localStorage.getItem("cti-muted") === "1"; } catch (e) {}
+const muteBtn = $("#muteBtn");
+const syncMute = () => muteBtn.textContent = muted ? "🔇" : "🔊";
+syncMute();
+function audioOn() {
+  try {
+    if (!ac) ac = new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === "suspended") ac.resume();
+  } catch (e) { ac = null; }
+}
+function tone(f1, f2, dur, type = "sine", vol = .16, delay = 0) {
+  if (!ac || muted) return;
+  const t = ac.currentTime + delay, o = ac.createOscillator(), g = ac.createGain();
+  o.type = type;
+  o.frequency.setValueAtTime(f1, t);
+  o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g).connect(ac.destination);
+  o.start(t); o.stop(t + dur + 0.03);
+}
+const sfx = {
+  idea: m => { const b = 520 * Math.pow(1.122, m - 1); tone(b, b * 1.9, .12, "sine", .2); tone(b * 2, b * 2.5, .08, "triangle", .05, .03); },
+  team: () => { tone(660, 660, .1, "triangle", .15); tone(880, 880, .12, "triangle", .15, .08); tone(1320, 1320, .16, "sine", .08, .16); },
+  cloud: () => { tone(320, 110, .38, "sawtooth", .06); tone(240, 90, .42, "sine", .16); },
+  gold: () => [784, 988, 1175, 1568].forEach((f, i) => tone(f, f, .15, "triangle", .12, i * .06)),
+  tick: () => tone(1100, 1100, .035, "square", .035),
+  go: () => { tone(523, 523, .1, "triangle", .14); tone(784, 784, .2, "triangle", .14, .1); },
+  end: () => [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, f, .25, "triangle", .12, i * .09)),
+  ui: () => tone(500, 900, .08, "sine", .1)
+};
+muteBtn.addEventListener("pointerdown", e => {
+  e.stopPropagation();
+  muted = !muted; syncMute();
+  try { localStorage.setItem("cti-muted", muted ? "1" : "0"); } catch (e) {}
+});
+const buzz = ms => { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) {} };
+
+/* ============ COPY ============ */
+const IDEA_LINES = [
+  "AI that writes lab records", "Attendance calculator v7", "Uber, but for notes",
+  "Another to-do app (respect)", "Canteen queue predictor", "Lost ID card finder",
+  "Dark mode for everything", "Bus tracker for 7:40 bus", "Notes-sharing app",
+  "Chatbot for the chatbot", "Club events in one place", "Smart water bottle??",
+  "Resume roaster", "Lab partner matchmaker", "Hostel laundry tracker", "GPA what-if calculator"
+];
+const TEAM_LINES = [
+  "Found a frontend dev!", "Teammate who reads docs", "Designer acquired 🎨",
+  "Someone who won't ghost", "Backend bestie joined", "Pitch queen unlocked",
+  "Debugging buddy!", "Has a laptop charger!", "Teammate w/ Figma skills"
+];
+const CLOUD_LINES = [
+  "I'll build it tomorrow", "Just one more tutorial…", "README coming soon™",
+  "Will start after exams", "Domain bought. Code? No.", "git commit -m 'final2'",
+  "5 more minutes…", "Let me plan the plan"
+];
+const GOLD_LINES = ["Hackathon-winning idea!", "Big brain moment!", "THE idea ✨"];
+const pick = a => a[Math.floor(Math.random() * a.length)];
+
+const RANKS = [
+  { min: 0,   name: "Professional Overthinker 🤔", sub: "Thinking is step one. Tapping is step two." },
+  { min: 90,  name: "Tomorrow Enthusiast 😴",       sub: "So many ideas. So many tomorrows." },
+  { min: 220, name: "Side-Project Starter 🛠️",     sub: "README: written. Code: loading…" },
+  { min: 420, name: "Weekend Builder 🔧",           sub: "Ships on Sundays. Respect." },
+  { min: 680, name: "Hackathon Hero ⚡",            sub: "24 hours, 3 Red Bulls, 1 working demo." },
+  { min: 980, name: "Certified Idea Machine 🚀",    sub: "Okay, who let you cook? (Keep cooking.)" }
+];
+const rankFor = s => RANKS.reduce((r, x) => s >= x.min ? x : r, RANKS[0]);
+
+/* friend challenge via ?beat=123 */
+const params = new URLSearchParams(location.search);
+let beat = parseInt(params.get("beat"), 10);
+if (!(beat > 0 && beat < 9999)) beat = 0;
+if (beat) {
+  $("#bubble").textContent = `your friend scored ${beat}. beat that? 👀`;
+  $("#introSub").textContent = `A friend challenged you. 20 seconds. Go!`;
+}
+
+/* ============ GAME ============ */
+const GAME_MS = 20000, LATE_MS = 15000;
+const field = $("#field");
+const els = {
+  score: $("#score"), scoreChip: $("#scoreChip"), mult: $("#mult"), boost: $("#boostChip"),
+  timer: $("#timer"), fill: $("#timerFill"), ttext: $("#timerText"),
+  fog: $("#fog"), banner: $("#banner"), toast: $("#toast"), game: $("#game")
+};
+let S, objs = [], raf = 0, last = 0;
+const OPENING = ["idea", "idea", "team", "idea", "cloud", "idea", "team", "idea"];
+
+function newState() {
+  return {
+    running: false, paused: false, elapsed: 0, nextSpawn: 300, spawned: 0,
+    score: 0, mult: 1, ideas: 0, team: 0, clouds: 0, gold: 0, escaped: 0, goldSpawned: 0,
+    lastX: -1, lastTick: -1, lateShown: false, escapeToasted: false
+  };
+}
+
+function show(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === id));
+}
+
+function startGame() {
+  audioOn(); sfx.ui();
+  clearField();
+  S = newState();
+  updateHud(true);
+  show("game");
+  bannerShow("Ready?", "", 700);
+  setTimeout(() => {
+    bannerShow("GO!", "", 650); sfx.go(); buzz(20);
+    S.running = true; last = performance.now();
+    cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
+  }, 750);
+}
+
+function clearField() { objs.forEach(o => o.el.remove()); objs = []; field.innerHTML = ""; }
+
+function sizeFor(type) {
+  const w = field.clientWidth;
+  const base = Math.max(64, Math.min(96, w / 5.2));
+  return { idea: base, gold: base * 1.08, team: base * 1.05, cloud: base * 1.35 }[type];
+}
+
+function spawn() {
+  const W = field.clientWidth, H = field.clientHeight;
+  let type;
+  if (S.spawned < OPENING.length) type = OPENING[S.spawned];
+  else {
+    const r = Math.random();
+    if (r < 0.045 && S.goldSpawned < 2 && S.elapsed > 5000) type = "gold";
+    else if (r < 0.25) type = "cloud";
+    else if (r < 0.45) type = "team";
+    else type = "idea";
+  }
+  if (type === "gold") S.goldSpawned++;
+  S.spawned++;
+
+  const size = sizeFor(type);
+  const ratio = type === "cloud" ? 90 / 120 : type === "team" ? 1 : 1.2;
+  const w = size, h = size * ratio;
+  // pick a lane away from the last spawn
+  let x, tries = 0;
+  do { x = w / 2 + 10 + Math.random() * (W - w - 20); tries++; }
+  while (S.lastX >= 0 && Math.abs(x - S.lastX) < w * 0.9 && tries < 8);
+  S.lastX = x;
+
+  const p = S.elapsed / GAME_MS;                       // 0 → 1 difficulty ramp
+  const travel = type === "cloud" ? 4.6 - p * 1.2 : 3.7 - p * 1.35; // seconds to cross the screen
+  const vy = (H + h) / (travel * (0.9 + Math.random() * 0.25));
+
+  const el = document.createElement("div");
+  el.className = "obj " + type;
+  el.style.width = w + "px"; el.style.height = h + "px";
+  const vb = type === "cloud" ? "0 0 120 90" : type === "team" ? "0 0 100 100" : "0 0 100 120";
+  const sym = type === "gold" || type === "idea" ? "bulb" : type;
+  const color = type === "gold" ? "#ffcf4d" : type === "idea" ? "#fff1a8" : type === "team" ? pick(["#c4a8ff", "#ffb3cf", "#a8e6cf", "#ffc9a3"]) : "";
+  el.innerHTML = `<div class="inner" style="animation-delay:${-Math.random() * 1.8}s"><svg viewBox="${vb}"><use href="#${sym}" ${color ? `color="${color}"` : ""}/></svg></div>`;
+  field.appendChild(el);
+  const o = { el, type, x, y: H + h / 2 + 10, w, h, vy, amp: 8 + Math.random() * 16, ph: Math.random() * 6.28, fr: 1.4 + Math.random() * 1.4, t: 0, dead: false };
+  place(o);
+  objs.push(o);
+}
+
+function place(o) {
+  const x = o.x + Math.sin(o.t * o.fr + o.ph) * o.amp;
+  o.cx = x; o.cy = o.y;
+  o.el.style.transform = `translate3d(${x - o.w / 2}px, ${o.y - o.h / 2}px, 0)`;
+}
+
+function loop(now) {
+  if (!S.running) return;
+  if (S.paused) { last = now; raf = requestAnimationFrame(loop); return; }
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  S.elapsed += dt * 1000;
+
+  // spawn
+  S.nextSpawn -= dt * 1000;
+  if (S.nextSpawn <= 0 && S.elapsed < GAME_MS - 600) {
+    spawn();
+    const p = S.elapsed / GAME_MS;
+    S.nextSpawn = (S.elapsed > LATE_MS ? 270 : 560 - p * 230) * (0.8 + Math.random() * 0.4);
+  }
+
+  // move
+  for (const o of objs) {
+    if (o.dead) continue;
+    o.t += dt; o.y -= o.vy * dt;
+    place(o);
+    if (o.y < -o.h) {
+      o.dead = true; o.el.remove();
+      if (o.type === "idea" || o.type === "gold") {
+        S.escaped++;
+        if (!S.escapeToasted) { S.escapeToasted = true; toast("one idea got away… 👋"); }
+      }
+    }
+  }
+  objs = objs.filter(o => !o.dead || o.el.isConnected);
+
+  // last 5 seconds: deadline energy
+  if (S.elapsed > LATE_MS && !S.lateShown) {
+    S.lateShown = true; els.timer.classList.add("late");
+    bannerShow("5s left!", "deadline energy ⚡", 1000); buzz(30);
+  }
+  const left = Math.max(0, GAME_MS - S.elapsed);
+  const sec = Math.ceil(left / 1000);
+  if (sec !== S.lastTick) { S.lastTick = sec; if (sec <= 3 && sec > 0) sfx.tick(); }
+  els.fill.style.transform = `scaleX(${left / GAME_MS})`;
+  els.ttext.textContent = sec + "s";
+
+  if (left <= 0) return endGame();
+  raf = requestAnimationFrame(loop);
+}
+
+/* tapping */
+field.addEventListener("pointerdown", e => {
+  if (!S || !S.running || S.paused) return;
+  const el = e.target.closest(".obj");
+  if (!el) return;
+  const o = objs.find(q => q.el === el);
+  if (!o || o.dead) return;
+  e.preventDefault();
+  hit(o);
+});
+
+function hit(o) {
+  o.dead = true;
+  const x = o.cx, y = o.cy;
+  let pts = 0, cls = "", msg = "";
+  if (o.type === "idea") {
+    pts = 10 * S.mult; S.ideas++; msg = pick(IDEA_LINES); sfx.idea(S.mult); buzz(12);
+    sparks(x, y, ["#ffe58a", "#fff", "#ffcf4d"]);
+  } else if (o.type === "gold") {
+    pts = 50 * S.mult; S.ideas++; S.gold++; msg = pick(GOLD_LINES); cls = "gold"; sfx.gold(); buzz([15, 30, 15]);
+    sparks(x, y, ["#ffcf4d", "#fff", "#ffb3cf", "#c9b6ff"], 16);
+  } else if (o.type === "team") {
+    S.team++;
+    const before = S.mult;
+    S.mult = Math.min(4, S.mult + 1);
+    pts = 5; cls = "team";
+    msg = S.mult > before ? `${pick(TEAM_LINES)} → ×${S.mult}` : pick(TEAM_LINES) + " (max boost!)";
+    sfx.team(); buzz(18);
+    sparks(x, y, ["#c9b6ff", "#a8e6cf", "#ffb3cf"]);
+  } else {
+    S.clouds++;
+    pts = -15; cls = "bad";
+    msg = pick(CLOUD_LINES);
+    sfx.cloud(); buzz(70);
+    if (S.mult > 1) { S.mult--; els.boost.classList.remove("lose"); void els.boost.offsetWidth; els.boost.classList.add("lose"); }
+    els.fog.classList.add("on"); setTimeout(() => els.fog.classList.remove("on"), 450);
+    els.game.classList.remove("shake"); void els.game.offsetWidth; els.game.classList.add("shake");
+  }
+  S.score = Math.max(0, S.score + pts);
+  o.el.classList.add(o.type === "cloud" ? "poof" : "caught");
+  setTimeout(() => o.el.remove(), 460);
+  popup(x, y, (pts > 0 ? "+" : "") + pts, msg, cls);
+  updateHud();
+}
+
+function updateHud(reset) {
+  els.score.textContent = S.score;
+  els.mult.textContent = S.mult;
+  els.boost.classList.toggle("on", S.mult > 1);
+  if (!reset) { els.scoreChip.classList.remove("bump"); void els.scoreChip.offsetWidth; els.scoreChip.classList.add("bump"); }
+  else { els.timer.classList.remove("late"); els.fill.style.transform = "scaleX(1)"; els.ttext.textContent = "20s"; }
+}
+
+function popup(x, y, pts, msg, cls) {
+  const d = document.createElement("div");
+  d.className = "pop " + cls;
+  const W = field.clientWidth;
+  d.style.top = Math.max(110, y) + "px";
+  d.innerHTML = `<span class="pts">${pts}</span><span class="msg"></span>`;
+  d.querySelector(".msg").textContent = msg;
+  field.appendChild(d);
+  const hw = d.offsetWidth / 2 + 8;
+  d.style.left = Math.max(hw, Math.min(W - hw, x)) + "px";
+  setTimeout(() => d.remove(), 1000);
+}
+function sparks(x, y, colors, n = 9) {
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement("i");
+    s.className = "spark";
+    const a = (i / n) * Math.PI * 2 + Math.random() * .4, r = 40 + Math.random() * 40;
+    s.style.left = x + "px"; s.style.top = y + "px";
+    s.style.background = colors[i % colors.length];
+    s.style.border = `1.5px solid ${INK}`;
+    s.style.setProperty("--dx", Math.cos(a) * r + "px");
+    s.style.setProperty("--dy", Math.sin(a) * r + "px");
+    field.appendChild(s);
+    setTimeout(() => s.remove(), 560);
+  }
+}
+let toastT;
+function toast(t) { els.toast.textContent = t; els.toast.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => els.toast.classList.remove("show"), 1600); }
+function bannerShow(big, small, ms) {
+  els.banner.innerHTML = big + (small ? `<small>${small}</small>` : "");
+  els.banner.style.animationDuration = ms + "ms";
+  els.banner.classList.remove("show"); void els.banner.offsetWidth; els.banner.classList.add("show");
+}
+
+/* pause when the student switches back to WhatsApp mid-game */
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && S && S.running && !S.paused) { S.paused = true; $("#pause").classList.add("show"); }
+});
+$("#resumeBtn").addEventListener("click", () => { audioOn(); S.paused = false; $("#pause").classList.remove("show"); });
+
+function endGame() {
+  S.running = false;
+  cancelAnimationFrame(raf);
+  els.fill.style.transform = "scaleX(0)"; els.ttext.textContent = "0s";
+  objs.forEach(o => { if (!o.dead) { o.el.style.transition = "opacity .4s"; o.el.style.opacity = "0"; } });
+  bannerShow("TIME'S UP!", "", 1100);
+  sfx.end(); buzz([20, 40, 20]);
+  setTimeout(showEnd, 1150);
+}
+
+/* ============ END SCREEN ============ */
+let endTimers = [];
+function showEnd() {
+  clearField();
+  const r = rankFor(S.score);
+  $("#rankName").textContent = r.name;
+  $("#rankSub").textContent = r.sub;
+  $("#sIdeas").textContent = S.ideas;
+  $("#sTeam").textContent = S.team;
+  $("#sClouds").textContent = S.clouds; $("#sCloudsLbl").textContent = S.clouds === 1 ? "snooze" : "snoozes";
+  $("#epitaph").textContent = S.escaped === 0
+    ? "Not a single idea escaped. Who ARE you? 🫡"
+    : `${S.escaped} idea${S.escaped > 1 ? "s" : ""} escaped. ${S.escaped > 1 ? "They're" : "It's"} an abandoned repo now. RIP 🪦`;
+  const bl = $("#beatLine");
+  bl.innerHTML = "";
+  if (beat) {
+    const b = document.createElement("div");
+    b.className = "beat";
+    b.textContent = S.score > beat ? `You beat your friend's ${beat}! Rub it in 😎` : S.score === beat ? `Tied with your friend at ${beat}. Rematch?` : `Your friend's ${beat} still stands… for now.`;
+    bl.appendChild(b);
+  }
+  buildPlant(S.ideas, S.team);
+  $("#equation").textContent = S.team > 0
+    ? `${S.ideas} idea${S.ideas === 1 ? "" : "s"} + ${S.team} teammate${S.team === 1 ? "" : "s"} = one actual project 🌼`
+    : `${S.ideas} idea${S.ideas === 1 ? "" : "s"}, 0 teammates… that's a lot of solo repos 😅`;
+
+  const stages = ["#resultCard", "#growCard", "#sigCard", "#eventsBtn", "#actions"];
+  stages.forEach(s => $(s).classList.remove("in"));
+  $("#ccg").classList.remove("go");
+  const end = $("#end");
+  show("end"); end.scrollTop = 0;
+  countUp($("#finalScore"), S.score, 900);
+  requestAnimationFrame(() => $("#resultCard").classList.add("in"));
+  confetti();
+  let touched = false;
+  const stop = () => touched = true;
+  end.addEventListener("touchstart", stop, { once: true, passive: true });
+  end.addEventListener("wheel", stop, { once: true, passive: true });
+  const glide = top => { if (!touched) end.scrollTo({ top, behavior: "smooth" }); };
+  endTimers.forEach(clearTimeout);
+  endTimers = [
+    setTimeout(() => $("#growCard").classList.add("in"), 900),
+    setTimeout(() => glide($("#growCard").offsetTop - 16), 1500),
+    setTimeout(() => $("#ccg").classList.add("go"), 2600),
+    setTimeout(() => { $("#sigCard").classList.add("in"); $("#eventsBtn").classList.add("in"); $("#actions").classList.add("in"); }, 3300),
+    setTimeout(() => glide(end.scrollHeight), 4600)
+  ];
+}
+
+function countUp(el, to, ms) {
+  const t0 = performance.now();
+  const step = t => {
+    const k = Math.min(1, (t - t0) / ms);
+    el.textContent = Math.round(to * (1 - Math.pow(1 - k, 3)));
+    if (k < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function buildPlant(ideas, team) {
+  const O = INK;
+  const nb = Math.max(1, Math.min(9, ideas));
+  const nm = Math.max(1, Math.min(4, team));
+  const d = t => `style="transition-delay:${t.toFixed(2)}s"`;
+  let s = `<defs>
+    <radialGradient id="glowG"><stop offset="0" stop-color="#fff6b0" stop-opacity=".95"/><stop offset=".55" stop-color="#ffe58a" stop-opacity=".35"/><stop offset="1" stop-color="#ffe58a" stop-opacity="0"/></radialGradient>
+    <linearGradient id="potG" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#ffc2da"/><stop offset="1" stop-color="#ff9fc4"/></linearGradient>
+  </defs>`;
+
+  /* ground, grass, tiny flowers */
+  s += `<ellipse cx="160" cy="287" rx="152" ry="11" fill="#a8e6cf" opacity=".6"/>`;
+  [22, 58, 96, 226, 262, 300].forEach(x => {
+    s += `<path d="M${x} 286 q-3 -8 -7 -11 M${x} 286 q0 -10 1 -14 M${x} 286 q3 -7 7 -10" stroke="#6cc58f" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+  });
+  [[44, 281, "#ffb3cf"], [276, 279, "#c9b6ff"], [212, 284, "#ffe58a"]].forEach(([x, y, c], i) => {
+    s += `<g class="t-pop" ${d(1.9 + i * .1)}>${[0, 72, 144, 216, 288].map(a => `<circle cx="${x + Math.cos(a * Math.PI / 180) * 4}" cy="${y + Math.sin(a * Math.PI / 180) * 4}" r="3.2" fill="${c}" stroke="${O}" stroke-width="1.5"/>`).join("")}<circle cx="${x}" cy="${y}" r="2.4" fill="#fff6b0" stroke="${O}" stroke-width="1.2"/></g>`;
+  });
+
+  /* trunk with two little forks */
+  s += `<g class="t-trunk">
+    <path d="M148 232 C150 206 144 186 150 166 C154 150 146 138 136 126 L146 120 C156 132 160 142 160 150 C162 140 172 130 182 122 L190 130 C178 140 170 152 168 170 C164 192 170 210 174 232 Z"
+      fill="#d9a785" stroke="${O}" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M156 200 q4 -8 0 -16 M162 176 q-4 -6 0 -12" stroke="#b9845f" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  </g>`;
+
+  /* puffy crown: outline layer, fill layer, highlights */
+  const puffs = [[160, 60, 46], [110, 84, 36], [210, 84, 36], [82, 116, 25], [238, 116, 25], [124, 118, 34], [196, 118, 34], [160, 106, 42]];
+  puffs.forEach(([x, y, r], i) => s += `<circle class="t-puff" cx="${x}" cy="${y}" r="${r}" fill="${O}" stroke="${O}" stroke-width="7" ${d(.55 + i * .06)}/>`);
+  puffs.forEach(([x, y, r], i) => s += `<circle class="t-puff" cx="${x}" cy="${y}" r="${r}" fill="${i > 4 ? "#94dcba" : "#a8e6cf"}" ${d(.55 + i * .06)}/>`);
+  [[146, 46, 13], [100, 74, 9], [200, 72, 9], [116, 108, 7]].forEach(([x, y, r], i) =>
+    s += `<circle class="t-puff" cx="${x}" cy="${y}" r="${r}" fill="#d4f6e6" ${d(.9 + i * .05)}/>`);
+  s += `<path class="t-puff" d="M128 34 Q140 20 158 18" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".8" ${d(1)}/>`;
+
+  /* hanging idea-bulbs (one per idea caught), blossoms for ideas still waiting */
+  const spots = [[160, 30], [114, 66], [206, 66], [138, 98], [182, 98], [86, 104], [234, 104], [122, 130], [198, 130]];
+  spots.forEach(([x, y], i) => {
+    if (i < nb) {
+      const w = i === 0 ? 36 : 28, gold = i === 0 && S.gold;
+      s += `<g transform="translate(${x} ${y})"><g class="t-bulb" ${d(1.25 + i * .11)}><g class="swing" style="animation-delay:${-i * .4}s">
+        <line x1="0" y1="-9" x2="0" y2="2" stroke="${O}" stroke-width="2.2" stroke-linecap="round"/>
+        <circle class="glowp" cx="0" cy="${w * .5}" r="${w * .95}" fill="url(#glowG)" style="animation-delay:${-i * .3}s"/>
+        <svg x="${-w / 2}" y="0" width="${w}" height="${w * 1.2}" viewBox="0 0 100 120" overflow="visible"><use href="#bulb" color="${gold ? "#ffcf4d" : "#fff1a8"}"/></svg>
+        ${gold ? `<text x="${w / 2 + 2}" y="4" font-size="13" fill="#ffcf4d" stroke="${O}" stroke-width=".8">✦</text>` : ""}
+      </g></g></g>`;
+    } else {
+      s += `<g class="t-bud" ${d(1.25 + i * .08)}>${[0, 72, 144, 216, 288].map(a => `<circle cx="${x + Math.cos(a * Math.PI / 180) * 5}" cy="${y + 6 + Math.sin(a * Math.PI / 180) * 5}" r="4" fill="#ffc2da" stroke="${O}" stroke-width="1.6"/>`).join("")}<circle cx="${x}" cy="${y + 6}" r="3" fill="#ffe58a" stroke="${O}" stroke-width="1.4"/></g>`;
+    }
+  });
+
+  /* fireflies + sparkles */
+  [[60, 60], [262, 50], [50, 160], [276, 160], [160, 2]].forEach(([x, y], i) =>
+    s += `<g class="t-spark" ${d(2 + i * .12)}><circle class="fly" cx="${x}" cy="${y}" r="3" fill="#fff6b0" stroke="${O}" stroke-width="1.2" style="animation-delay:${-i * .7}s"/></g>`);
+  [[34, 92, 14], [290, 88, 12], [244, 24, 11], [72, 30, 10]].forEach(([x, y, z], i) =>
+    s += `<g class="t-spark" ${d(2.1 + i * .1)}><text class="twk" x="${x}" y="${y}" font-size="${z}" fill="#fff" stroke="${O}" stroke-width=".9" style="animation-delay:${-i * .6}s">✦</text></g>`);
+
+  /* the campus pot */
+  s += `<path d="M118 238 h84 l-10 49 h-64 z" fill="url(#potG)" stroke="${O}" stroke-width="3.5" stroke-linejoin="round"/>
+    <rect x="110" y="224" width="100" height="19" rx="9.5" fill="#ff9fc4" stroke="${O}" stroke-width="3.5"/>
+    <text x="160" y="238" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="700" font-size="11.5" fill="${O}">campus</text>
+    <ellipse cx="146" cy="260" rx="3" ry="3.7" fill="${O}"/><ellipse cx="174" cy="260" rx="3" ry="3.7" fill="${O}"/>
+    <circle cx="147" cy="258.8" r="1.1" fill="#fff"/><circle cx="175" cy="258.8" r="1.1" fill="#fff"/>
+    <ellipse cx="138" cy="267" rx="4.5" ry="2.6" fill="#ff7fb0" opacity=".7"/><ellipse cx="182" cy="267" rx="4.5" ry="2.6" fill="#ff7fb0" opacity=".7"/>
+    <path d="M154 266 q6 5 12 0" stroke="${O}" stroke-width="2.5" fill="none" stroke-linecap="round"/>`;
+
+  /* teammates gathered round: one waters, one cheers, the rest hang out */
+  const mates = [
+    { x: 76, y: 286, w: 46, c: "#c4a8ff", can: true },
+    { x: 246, y: 286, w: 46, c: "#ffb3cf", heart: true },
+    { x: 30, y: 290, w: 34, c: "#a8e6cf" },
+    { x: 292, y: 290, w: 34, c: "#ffc9a3" }
+  ];
+  mates.slice(0, nm).forEach((m, i) => {
+    s += `<g class="t-mate" ${d(1.05 + i * .15)}><g class="mate-hop" style="animation-delay:${i * .3}s">`;
+    if (m.can) s += `<g class="t-pop" ${d(2.3)}><rect x="${m.x - 30}" y="${m.y - m.w - 26}" width="60" height="20" rx="10" fill="#fff" stroke="${O}" stroke-width="2.2"/>
+        <path d="M${m.x - 4} ${m.y - m.w - 6.5} l4 6 l4 -6" fill="#fff" stroke="${O}" stroke-width="2.2" stroke-linejoin="round"/><rect x="${m.x - 5}" y="${m.y - m.w - 8}" width="10" height="3" fill="#fff"/>
+        <text x="${m.x}" y="${m.y - m.w - 12}" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="700" font-size="11.5" fill="${O}">cheddam!</text></g>`;
+    s += `<svg x="${m.x - m.w / 2}" y="${m.y - m.w}" width="${m.w}" height="${m.w}" viewBox="0 0 100 100" overflow="visible"><use href="#team" color="${m.c}"/></svg>`;
+    if (m.heart) s += `<text class="heart" x="${m.x + 14}" y="${m.y - m.w - 2}" font-size="14">💜</text>`;
+    s += `</g></g>`;
+  });
+
+  $("#plant").innerHTML = s;
+}
+
+function confetti() {
+  const cols = ["#ffe58a", "#c9b6ff", "#ffb3cf", "#a8e6cf", "#9d7cf0", "#fff"];
+  for (let i = 0; i < 46; i++) {
+    const c = document.createElement("i");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = cols[i % cols.length];
+    c.style.border = `1.5px solid ${INK}`;
+    c.style.setProperty("--dx", (Math.random() * 120 - 60) + "px");
+    c.style.setProperty("--rot", (Math.random() * 900 - 450) + "deg");
+    c.style.animationDuration = (1.8 + Math.random() * 1.6) + "s";
+    c.style.animationDelay = Math.random() * .5 + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4200);
+  }
+}
+
+/* ============ SHARING ============ */
+const baseUrl = () => location.origin + location.pathname;
+const challengeUrl = () => `${baseUrl()}?beat=${S.score}`;
+const shareText = () => `I scored ${S.score} in Catch That Idea! 💡 and I'm officially a "${rankFor(S.score).name}". Bet you can't beat it 👉`;
+
+function svgImg(inner, vb, color) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => res(img); img.onerror = () => res(null);
+    img.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" color="${color || "#fff1a8"}">${inner}</svg>`);
+  });
+}
+function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+
+async function makeCard() {
+  try { await document.fonts.load("700 60px Fredoka"); } catch (e) {}
+  const W = 1080, H = 1350, c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const x = c.getContext("2d");
+  const F = (w, s) => `${w} ${s}px Fredoka, ui-rounded, system-ui, sans-serif`;
+  const g = x.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, "#f3ecff"); g.addColorStop(1, "#d6c3ff");
+  x.fillStyle = g; x.fillRect(0, 0, W, H);
+  x.fillStyle = "#9d7cf033";
+  for (let i = 0; i < W; i += 36) for (let j = 0; j < H; j += 36) { x.beginPath(); x.arc(i, j, 2, 0, 7); x.fill(); }
+  x.fillStyle = "#fff"; x.font = F(700, 40);
+  [[90, 120], [980, 210], [120, 1180], [960, 1100], [860, 90]].forEach(([a, b]) => x.fillText("✦", a, b));
+
+  const bulb = await svgImg(ART.bulb, "0 0 100 120", S.gold ? "#ffcf4d" : "#fff1a8");
+  const mate = await svgImg(ART.team, "0 0 100 100", "#c4a8ff");
+  const mate2 = await svgImg(ART.team, "0 0 100 100", "#a8e6cf");
+  x.textAlign = "center";
+  x.lineJoin = "round";
+  const outline = (t, y, size, fill) => {
+    x.font = F(700, size); x.lineWidth = size / 6; x.strokeStyle = INK;
+    x.fillStyle = INK; x.fillText(t, W / 2, y + size / 12);
+    x.strokeText(t, W / 2, y); x.fillStyle = fill; x.fillText(t, W / 2, y);
+  };
+  outline("Catch That Idea!", 150, 96, "#fff");
+  if (bulb) x.drawImage(bulb, W / 2 - 120, 200, 240, 288);
+  if (mate) x.drawImage(mate, W / 2 - 300, 360, 140, 140);
+  if (mate2) x.drawImage(mate2, W / 2 + 160, 360, 140, 140);
+
+  // card
+  rr(x, 110, 530, W - 220, 420, 48); x.fillStyle = INK; x.fill();
+  rr(x, 110, 515, W - 220, 420, 48); x.fillStyle = "#fffdf6"; x.fill(); x.lineWidth = 8; x.strokeStyle = INK; x.stroke();
+  x.fillStyle = "#7a6a9b"; x.font = F(600, 38); x.fillText("I'm officially a", W / 2, 600);
+  x.fillStyle = INK; x.font = F(700, rankFor(S.score).name.length > 22 ? 56 : 64); x.fillText(rankFor(S.score).name, W / 2, 680);
+  outline(String(S.score), 838, 140, "#ffe58a");
+  x.fillStyle = INK; x.font = F(600, 38);
+  x.fillText(`💡 ${S.ideas} ideas   ·   👥 ${S.team} teammates`, W / 2, 905);
+
+  x.fillStyle = INK; x.font = F(700, 52); x.fillText("Bet you can't beat it. 👀", W / 2, 1040);
+  x.fillStyle = "#7b5ce0"; x.font = F(600, 40); x.fillText("CREATE · CONNECT · GROW", W / 2, 1110);
+  rr(x, 90, 1170, W - 180, 110, 55); x.fillStyle = INK; x.fill();
+  x.fillStyle = "#fff"; x.font = F(700, 40); x.fillText("Vijaya · SAC Technical Head Nominee", W / 2, 1240);
+  return new Promise(res => c.toBlob(res, "image/png"));
+}
+
+function download(blob) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = `catch-that-idea-${S.score}.png`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+
+$("#shareBtn").addEventListener("click", async () => {
+  sfx.ui();
+  const text = shareText(), url = challengeUrl();
+  if (navigator.share) {
+    try { await navigator.share({ title: "Catch That Idea!", text, url }); return; }
+    catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + url)}`, "_blank", "noopener");
+});
+
+$("#cardBtn").addEventListener("click", async () => {
+  sfx.ui();
+  const btn = $("#cardBtn"), old = btn.textContent;
+  btn.textContent = "Making it cute…";
+  const blob = await makeCard();
+  btn.textContent = old;
+  if (!blob) return;
+  const file = new File([blob], `catch-that-idea-${S.score}.png`, { type: "image/png" });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], text: shareText() + " " + challengeUrl() }); return; }
+    catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  download(blob);
+});
+
+/* ============ EVENTS TEASER ============ */
+const trailer = $("#trailer"), vid = $("#vid"), tvMsg = $("#tvMsg"), tvEnd = $("#tvEnd"), tvBar = $("#tvBar");
+let vidFailed = false;
+function msg(t) { $("#tvMsgText").textContent = t; tvMsg.style.display = "grid"; }
+function playVid() {
+  tvEnd.classList.remove("show");
+  vid.muted = muted;
+  vid.currentTime = 0;
+  const p = vid.play();
+  if (p && p.catch) p.catch(() => { if (vidFailed || vid.error) return; vid.muted = true; vid.play().catch(() => { if (!vidFailed && !vid.error) msg("Tap to play ▶"); }); });
+}
+function openTrailer() {
+  sfx.ui();
+  trailer.classList.add("show");
+  if (vidFailed) { msg("The teaser couldn't load 🙈 try again on better network?"); return; }
+  if (vid.readyState < 3) msg("popping the popcorn… 🍿");
+  if (vid.preload === "none") { vid.preload = "auto"; vid.load(); }
+  playVid();
+}
+function closeTrailer() {
+  vid.pause();
+  trailer.classList.remove("show");
+  tvEnd.classList.remove("show");
+}
+vid.addEventListener("playing", () => tvMsg.style.display = "none");
+vid.addEventListener("waiting", () => msg("popping the popcorn… 🍿"));
+vid.addEventListener("timeupdate", () => { if (vid.duration) tvBar.style.width = (vid.currentTime / vid.duration * 100) + "%"; });
+vid.addEventListener("ended", () => { tvBar.style.width = "100%"; tvEnd.classList.add("show"); });
+vid.addEventListener("error", () => { vidFailed = true; msg("The teaser couldn't load 🙈 try again on better network?"); });
+$("#tv").addEventListener("click", e => {
+  if (e.target.closest("button")) return;
+  if (tvEnd.classList.contains("show")) return;
+  if (vid.paused) { vid.play().catch(() => {}); } else { vid.pause(); msg("paused ⏸ tap to continue"); }
+});
+vid.addEventListener("play", () => { if (vid.readyState >= 3) tvMsg.style.display = "none"; });
+$("#tvReplay").addEventListener("click", () => { sfx.ui(); playVid(); });
+$("#tvBack").addEventListener("click", closeTrailer);
+$("#tvClose").addEventListener("click", closeTrailer);
+trailer.addEventListener("click", e => { if (e.target === trailer) closeTrailer(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && trailer.classList.contains("show")) closeTrailer(); });
+$("#eventsBtn").addEventListener("click", openTrailer);
+
+$("#startBtn").addEventListener("click", startGame);
+$("#againBtn").addEventListener("click", () => { endTimers.forEach(clearTimeout); closeTrailer(); startGame(); });
+
+/* test hook (harmless in production) */
+window.__cti = { get state() { return S; }, get objs() { return objs; }, hit: o => hit(o), makeCard };
+})();
+</script>
+</body>
+</html>
