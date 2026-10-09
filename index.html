@@ -153,8 +153,9 @@ h1.title span{color:var(--yellow);display:inline-block;animation:bob 2.6s ease-i
 .pause.show{display:grid}
 
 /* ---------- END ---------- */
-#end{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;justify-content:flex-start;gap:14px;padding-top:max(20px,env(safe-area-inset-top));padding-bottom:max(28px,env(safe-area-inset-bottom))}
+#end{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;justify-content:flex-start;gap:14px;padding-top:calc(max(14px,env(safe-area-inset-top)) + 52px);padding-bottom:max(28px,env(safe-area-inset-bottom))}
 #end > *{flex:none;width:100%;max-width:420px}
+#end > .end-home,#end > .scroll-more{width:auto;max-width:none}
 .stage{opacity:0;transform:translateY(18px) scale(.97);transition:opacity .5s,transform .5s cubic-bezier(.3,1.5,.5,1)}
 .stage.in{opacity:1;transform:none}
 .card{background:var(--card);border:3px solid var(--ink);border-radius:var(--r);box-shadow:0 5px 0 var(--ink);padding:16px;text-align:center}
@@ -204,8 +205,20 @@ h1.title span{color:var(--yellow);display:inline-block;animation:bob 2.6s ease-i
 .tagline em{font-style:normal;color:var(--deep)}
 .telugu{font-size:14.5px;color:var(--ink-soft);margin-top:10px;font-style:italic;line-height:1.35}
 .sig{display:flex;align-items:center;gap:12px;text-align:left;background:var(--ink);color:#fff;border-color:var(--ink)}
-.sig .av{flex:none;width:56px;height:56px;border-radius:50%;background:var(--yellow);border:3px solid #fff;display:grid;place-items:center}
-.sig .av svg{width:34px;height:40px;overflow:visible}
+.sig .av{position:relative;flex:none;width:84px;height:84px;border-radius:50%;background:var(--yellow);border:3px solid #fff;display:grid;place-items:center;overflow:hidden;box-shadow:0 0 0 3px var(--yellow)}
+.sig .av img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 25%}
+.sig .av svg{width:44px;height:52px;overflow:visible}
+.home-btn{width:38px;height:38px;border-radius:50%;background:#fff;border:2.5px solid var(--ink);box-shadow:0 3px 0 var(--ink);font-size:18px;font-weight:700;flex:none;display:grid;place-items:center;line-height:1}
+.home-btn:active,.end-home:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.end-home{position:fixed;z-index:50;top:max(12px,env(safe-area-inset-top));left:12px;display:flex;align-items:center;gap:6px;
+  background:#fff;border:2.5px solid var(--ink);border-radius:99px;padding:6px 14px 6px 10px;font-weight:700;font-size:15px;box-shadow:0 3px 0 var(--ink)}
+.scroll-more{position:fixed;z-index:50;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--ink);color:#fff;border-radius:99px;padding:9px 18px;font-weight:600;font-size:15px;white-space:nowrap;
+  box-shadow:0 4px 14px #4a3a6b55;opacity:0;pointer-events:none;transition:opacity .3s}
+.scroll-more.show{opacity:1;pointer-events:auto;animation:nudgeDown 1.4s ease-in-out infinite}
+.scroll-more b{display:inline-block;margin-left:4px}
+@keyframes nudgeDown{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(5px)}}
+@media (max-width:360px){.chip{min-width:62px;font-size:17px;padding:4px 9px}.home-btn,.mute{width:34px;height:34px}}
 .sig .nm{font-size:24px;font-weight:700;line-height:1}
 .sig .role{font-size:14px;font-weight:500;opacity:.9;margin-top:3px}
 .events-btn{position:relative;display:flex;align-items:center;gap:12px;text-align:left;width:100%;
@@ -292,6 +305,7 @@ h1.title span{color:var(--yellow);display:inline-block;animation:bob 2.6s ease-i
     <div id="field"></div>
     <div class="fog" id="fog"></div>
     <div class="hud">
+      <button class="home-btn" id="gameHome" aria-label="Back to home">←</button>
       <div class="chip" id="scoreChip">💡 <span id="score">0</span></div>
       <div class="timer" id="timer"><i id="timerFill"></i><b id="timerText">20s</b></div>
       <div class="chip boost" id="boostChip">👥 ×<span id="mult">1</span></div>
@@ -304,6 +318,8 @@ h1.title span{color:var(--yellow);display:inline-block;animation:bob 2.6s ease-i
 
   <!-- END -->
   <section id="end" class="screen">
+    <button class="end-home" id="endHome" aria-label="Back to home">← Home</button>
+    <button class="scroll-more" id="scrollMore">Scroll for more <b>↓</b></button>
     <div class="card stage" id="resultCard">
       <div class="timesup">⏰ time's up! you are a…</div>
       <div class="rank" id="rankName">Hackathon Hero ⚡</div>
@@ -333,7 +349,7 @@ h1.title span{color:var(--yellow);display:inline-block;animation:bob 2.6s ease-i
     </div>
 
     <div class="card sig stage" id="sigCard">
-      <div class="av"><svg viewBox="0 0 100 120"><use href="#bulb" color="#fff9ec"/></svg></div>
+      <div class="av"><svg viewBox="0 0 100 120"><use href="#bulb" color="#fff9ec"/></svg><!-- your photo: put image.png next to index.html. If it's missing, the bulb shows instead. --><img src="image.jpeg" alt="Vijaya" onerror="this.remove()"></div>
       <div><div class="nm">Vijaya</div><div class="role">SAC Technical Head Nominee</div></div>
     </div>
 
@@ -541,6 +557,7 @@ function show(id) {
   document.querySelectorAll(".screen").forEach(s => s.classList.toggle("active", s.id === id));
 }
 
+let goTimer = 0, endTimer = 0;
 function startGame() {
   audioOn(); sfx.ui();
   clearField();
@@ -548,7 +565,8 @@ function startGame() {
   updateHud(true);
   show("game");
   bannerShow("Ready?", "", 700);
-  setTimeout(() => {
+  clearTimeout(goTimer);
+  goTimer = setTimeout(() => {
     bannerShow("GO!", "", 650); sfx.go(); buzz(20);
     S.running = true; last = performance.now();
     cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
@@ -753,7 +771,7 @@ function endGame() {
   objs.forEach(o => { if (!o.dead) { o.el.style.transition = "opacity .4s"; o.el.style.opacity = "0"; } });
   bannerShow("TIME'S UP!", "", 1100);
   sfx.end(); buzz([20, 40, 20]);
-  setTimeout(showEnd, 1150);
+  endTimer = setTimeout(showEnd, 1150);
 }
 
 /* ============ END SCREEN ============ */
@@ -789,6 +807,8 @@ function showEnd() {
   show("end"); end.scrollTop = 0;
   countUp($("#finalScore"), S.score, 900);
   requestAnimationFrame(() => $("#resultCard").classList.add("in"));
+  scrollHint(false);
+  setTimeout(checkMore, 700);
   confetti();
   let touched = false;
   const stop = () => touched = true;
@@ -1050,6 +1070,34 @@ $("#tvClose").addEventListener("click", closeTrailer);
 trailer.addEventListener("click", e => { if (e.target === trailer) closeTrailer(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && trailer.classList.contains("show")) closeTrailer(); });
 $("#eventsBtn").addEventListener("click", openTrailer);
+
+/* ============ HOME + SCROLL HINT ============ */
+function goHome() {
+  sfx.ui();
+  clearTimeout(goTimer); clearTimeout(endTimer);
+  endTimers.forEach(clearTimeout);
+  if (S) { S.running = false; S.paused = false; }
+  cancelAnimationFrame(raf);
+  clearField();
+  $("#pause").classList.remove("show");
+  els.banner.classList.remove("show");
+  els.fog.classList.remove("on");
+  closeTrailer();
+  scrollHint(false);
+  show("intro");
+}
+$("#gameHome").addEventListener("pointerdown", e => e.stopPropagation());
+$("#gameHome").addEventListener("click", goHome);
+$("#endHome").addEventListener("click", goHome);
+
+const endEl = $("#end"), moreBtn = $("#scrollMore");
+function scrollHint(on) { moreBtn.classList.toggle("show", !!on); }
+function checkMore() {
+  const left = endEl.scrollHeight - endEl.clientHeight - endEl.scrollTop;
+  scrollHint(endEl.classList.contains("active") && endEl.scrollTop < 80 && left > 40);
+}
+endEl.addEventListener("scroll", checkMore, { passive: true });
+moreBtn.addEventListener("click", () => endEl.scrollBy({ top: endEl.clientHeight * 0.75, behavior: "smooth" }));
 
 $("#startBtn").addEventListener("click", startGame);
 $("#againBtn").addEventListener("click", () => { endTimers.forEach(clearTimeout); closeTrailer(); startGame(); });
